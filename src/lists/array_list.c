@@ -5,15 +5,17 @@
  *      Author: simon
  */
 #include "array_list.h"
+#include "string.h"
 
 struct Array_list {
+	int capacity;
 	int size;
 	void ** array;
 };
 
-Array_list * Array_list_Create(int size) {
+Array_list * Array_list_Create(int capacity) {
 
-	if (size < 0) {
+	if (capacity < 0) {
 		return NULL;
 	}
 
@@ -23,14 +25,15 @@ Array_list * Array_list_Create(int size) {
 		return NULL;
 	}
 
-	size = (size == 0) ? ARRAY_LIST_DEFAULT_INIT_SIZE : size;
-	self->size = size;
-
-	self->array = malloc(size * sizeof(void *));
+	capacity = (capacity == 0) ? ARRAY_LIST_DEFAULT_INIT_SIZE : capacity;
+	self->capacity = capacity;
+	self->size = 0;
+	self->array = malloc(capacity * sizeof(void *));
 	if (self->array == NULL) {
 		free(self);
 		return NULL;
 	}
+	memset(self->array, 0, sizeof(self->array));
 
 	return self;
 }
@@ -43,9 +46,34 @@ void Array_list_Destroy(Array_list * self) {
 	}
 }
 
-int Array_list_get_size(Array_list * self) {
+int Array_list_get_capacity(Array_list * self) {
 	if (self == NULL) {
 		return -1;
 	}
+	return self->capacity;
+}
+
+static void _shift_to_right(Array_list * self, int idx) {
+	memmove(self->array[idx + 1], self->array[idx], sizeof(self->array) - idx);
+}
+
+int Array_list_add_on_index(Array_list * self, int idx, void * element) {
+	if (self == NULL || element == NULL) {
+		return ARRAY_LIST_ILLEGAL_ARGUEMENT_EXCEPTION;
+	}
+	if (idx < 0 || idx > self->size) {
+		return ARRAY_LIST_INDEX_OUT_OF_BOUNDS_EXCEPTION;
+	}
+	if (self->array[idx] != NULL) {
+		_shift_to_right(self, idx);
+	}
+
+	self->array[idx] = element;
+	self->size += 1;
+
+	return ARRAY_LIST_OK;
+}
+
+int Array_list_size(Array_list * self) {
 	return self->size;
 }
