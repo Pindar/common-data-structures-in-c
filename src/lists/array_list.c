@@ -53,9 +53,6 @@ int Array_list_get_capacity(Array_list * self) {
 	return self->capacity;
 }
 
-static void _shift_to_right(Array_list * self, int idx) {
-	memmove(self->array[idx + 1], self->array[idx], sizeof(self->array) - idx);
-}
 
 int Array_list_add_on_index(Array_list * self, int idx, void * element) {
 	if (self == NULL || element == NULL) {
@@ -65,7 +62,7 @@ int Array_list_add_on_index(Array_list * self, int idx, void * element) {
 		return ARRAY_LIST_INDEX_OUT_OF_BOUNDS_EXCEPTION;
 	}
 	if (self->array[idx] != NULL) {
-		_shift_to_right(self, idx);
+		//_shift_to_right(self, idx);
 	}
 
 	self->array[idx] = element;
