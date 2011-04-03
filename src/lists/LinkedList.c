@@ -237,3 +237,31 @@ int LinkedList_destroy_all_items(LinkedList ** list, destroy_f_ptr f_ptr) {
 
 	return CDS_OK;
 }
+
+static iterator_item _next(iterator_iterate_on in, int * pos) {
+	if (in == NULL || *pos < 0) {
+		return NULL;
+	}
+
+	LinkedList * self = (LinkedList *) in;
+	void * item = LinkedList_get(self, *pos);
+	*pos += 1;
+	return item;
+}
+
+static _Bool _has_next(iterator_iterate_on in, int pos) {
+	if (in == NULL || pos < 0) {
+		return false;
+	}
+
+	void * item;
+	LinkedList * self = (LinkedList *) in;
+
+	item = LinkedList_get(self, pos);
+
+	return item != NULL;
+}
+
+Iterator * LinkedList_iterator(LinkedList * self) {
+	return Iterator_Create((iterator_iterate_on) self, _has_next, _next, 1);
+}

@@ -10,7 +10,11 @@ struct Iterator {
 };
 
 
-Iterator * Iterator_Create(iterator_iterate_on io, iterator_has_next_f has_next_f, iterator_next_f next_f) {
+Iterator * Iterator_Create(iterator_iterate_on io, iterator_has_next_f has_next_f, iterator_next_f next_f, int start_pos) {
+	if (io == NULL || has_next_f == NULL || next_f == NULL) {
+		return NULL;
+	}
+
 	Iterator * self = malloc(sizeof(Iterator));
 	if (self == NULL) {
 		return NULL;
@@ -19,7 +23,7 @@ Iterator * Iterator_Create(iterator_iterate_on io, iterator_has_next_f has_next_
 	self->io = io;
 	self->has_next = has_next_f;
 	self->next = next_f;
-	self->position = 0;
+	self->position = start_pos;
 
 	return self;
 }

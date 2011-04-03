@@ -3,6 +3,7 @@ extern "C"
 #include "CppUTest/TestHarness_c.h"
 
 #include "LinkedList.h"
+#include "iterator.h"
 
 }
 
@@ -163,4 +164,64 @@ TEST(LinkedList, remove_last_two_items)
 	STRCMP_CONTAINS("test", result);
 	free(result);
 
+}
+
+TEST(LinkedList, create_iterator)
+{
+	Iterator * it = LinkedList_iterator(list);
+	CHECK(NULL != it);
+
+	Iterator_Destroy(it);
+}
+
+TEST(LinkedList, iterator_has_next_empty)
+{
+	Iterator * it = LinkedList_iterator(list);
+
+	CHECK(!Iterator_has_next(it));
+
+	Iterator_Destroy(it);
+}
+
+TEST(LinkedList, iterator_has_next_true)
+{
+	int item = 42;
+	LinkedList_add(list, &item);
+	Iterator * it = LinkedList_iterator(list);
+
+	CHECK(Iterator_has_next(it));
+
+	Iterator_Destroy(it);
+}
+
+TEST(LinkedList, iterator_next_empty_list)
+{
+	Iterator * it = LinkedList_iterator(list);
+
+	CHECK(NULL == Iterator_next(it));
+
+	Iterator_Destroy(it);
+}
+
+TEST(LinkedList, iterator_next_item) {
+	int item = 42;
+	LinkedList_add(list, &item);
+	Iterator * it = LinkedList_iterator(list);
+
+	POINTERS_EQUAL(&item, Iterator_next(it));
+
+	Iterator_Destroy(it);
+}
+
+TEST(LinkedList, iterator_next_item_with_two_items)
+{
+	int item_1 = 42, item_2 = 43;
+	LinkedList_add(list, &item_1);
+	LinkedList_add(list, &item_2);
+	Iterator * it = LinkedList_iterator(list);
+
+	POINTERS_EQUAL(&item_1, Iterator_next(it));
+	POINTERS_EQUAL(&item_2, Iterator_next(it));
+
+	Iterator_Destroy(it);
 }

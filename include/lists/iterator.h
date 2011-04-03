@@ -16,7 +16,7 @@ typedef void * iterator_iterate_on;
 typedef _Bool (*iterator_has_next_f) (iterator_iterate_on, int);
 typedef iterator_item (*iterator_next_f) (iterator_iterate_on, int*);
 
-Iterator * Iterator_Create(iterator_iterate_on, iterator_has_next_f, iterator_next_f);
+Iterator * Iterator_Create(iterator_iterate_on, iterator_has_next_f, iterator_next_f, int start_pos);
 void Iterator_Destroy(Iterator *);
 
 _Bool Iterator_has_next(Iterator *);
