@@ -4,7 +4,7 @@ extern "C"
 
 #include "LinkedList.h"
 #include "iterator.h"
-
+#include <string.h>
 }
 
 #include "CppUTest/TestHarness.h"
